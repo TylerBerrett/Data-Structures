@@ -11,6 +11,7 @@ class ListNode:
     """Wrap the given value in a ListNode and insert it
     after this node. Note that this node could already
     have a next node it is point to."""
+
     def insert_after(self, value):
         current_next = self.next
         self.next = ListNode(value, self, current_next)
@@ -20,6 +21,7 @@ class ListNode:
     """Wrap the given value in a ListNode and insert it
     before this node. Note that this node could already
     have a previous node it is point to."""
+
     def insert_before(self, value):
         current_prev = self.prev
         self.prev = ListNode(value, current_prev, self)
@@ -28,6 +30,7 @@ class ListNode:
 
     """Rearranges this ListNode's previous and next pointers
     accordingly, effectively deleting this ListNode."""
+
     def delete(self):
         if self.prev:
             self.prev.next = self.next
@@ -40,7 +43,7 @@ the list's head and tail nodes."""
 
 
 class DoublyLinkedList:
-    def __init__(self, node=None):
+    def __init__(self, node: ListNode = None):
         self.head = node
         self.tail = node
         self.length = 1 if node is not None else 0
@@ -51,42 +54,85 @@ class DoublyLinkedList:
     """Wraps the given value in a ListNode and inserts it 
     as the new head of the list. Don't forget to handle 
     the old head node's previous pointer accordingly."""
+
     def add_to_head(self, value):
-        pass
+        self.length += 1
+        if self.head and self.tail:  # Checks to see if a node is already at head
+            self.head.insert_before(value)
+            self.head = self.head.prev
+        else:
+            self.head = self.tail = ListNode(value)
 
     """Removes the List's current head node, making the
     current head's next node the new head of the List.
     Returns the value of the removed Node."""
+
     def remove_from_head(self):
-        pass
+        if self.head:
+            removed_value = self.head.value
+            self.delete(self.head)
+            return removed_value
 
     """Wraps the given value in a ListNode and inserts it 
     as the new tail of the list. Don't forget to handle 
     the old tail node's next pointer accordingly."""
+
     def add_to_tail(self, value):
-        pass
+        self.length += 1
+        if self.head and self.tail:
+            self.tail.insert_after(value)
+            self.tail = self.tail.next
+        else:
+            self.head = self.tail = ListNode(value)
 
     """Removes the List's current tail node, making the 
     current tail's previous node the new tail of the List.
     Returns the value of the removed Node."""
+
     def remove_from_tail(self):
-        pass
+        if self.tail:
+            removed_value = self.tail.value
+            self.delete(self.tail)
+            return removed_value
 
     """Removes the input node from its current spot in the 
     List and inserts it as the new head node of the List."""
+
     def move_to_front(self, node):
-        pass
+        self.delete(node)
+        self.add_to_head(node.value)
 
     """Removes the input node from its current spot in the 
     List and inserts it as the new tail node of the List."""
+
     def move_to_end(self, node):
-        pass
+        self.delete(node)
+        self.add_to_tail(node.value)
 
     """Removes a node from the list and handles cases where
     the node was the head or the tail"""
+
     def delete(self, node):
-        pass
-        
+        self.length -= 1
+        if node.prev and node.next:
+            node.delete()
+        elif node.next and not node.prev:
+            node.next.prev = None
+            self.head = node.next
+        elif node.prev and not node.next:
+            node.prev.next = None
+            self.tail = node.prev
+        else:
+            self.head = self.tail = None
+
     """Returns the highest value currently in the list"""
+
     def get_max(self):
-        pass
+        next_node = self.head
+        max_value = 0
+        for i in range(0, self.length):
+            if next_node:
+                if next_node.value > max_value:
+                    max_value = next_node.value
+            next_node = next_node.next
+        return max_value
